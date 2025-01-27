@@ -34,6 +34,7 @@ class ApiService {
     }
   }
 
+
   Future getTotalByCategory(String year, String month) async {
     if (month == '1' || month == '2' || month == '3' || month == '4' || month == '5' || month == '6' || month == '7' || month == '8' || month == '9'){
       month = '0$month';
@@ -51,8 +52,8 @@ class ApiService {
     ApiResponse response = await _api.postRequest('login', {'email': email, 'password': password});
     if (response.success) {
       if (response.data['success']){
-        TokenService.saveToken(response.data['data']['access_token']);
-        TokenService.saveRefreshToken(response.data['data']['refresh_token']);
+        StorageService.saveToken(response.data['data']['access_token']);
+        StorageService.saveRefreshToken(response.data['data']['refresh_token']);
         return true;
       }else{
         Get.snackbar('Error', '${response.data['message']}');
@@ -79,4 +80,15 @@ class ApiService {
     }
   }
 
+  Future addExpense(double amount, String category, String date, String notes) async {
+    ApiResponse response = await _api.postRequest('expenses', {'amount': amount, 'category': category, 'date': date, 'notes': notes});
+    if (response.success) {
+      if (response.data['success']){
+        return true;
+      }else{
+        Get.snackbar('Error', '${response.data['message']}');
+        return false;
+      }
+    }
+  }
 }

@@ -34,7 +34,7 @@ class HomeController extends GetxController {
   }
 
   bool _validateToken() {
-    String? token = TokenService.getToken();
+    String? token = StorageService.getToken();
     if (token == null) {
       return false;
     } else {

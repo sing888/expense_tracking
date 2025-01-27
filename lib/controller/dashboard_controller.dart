@@ -48,7 +48,6 @@ class DashboardController extends GetxController {
     var month = selectMonth.value.toString();
     var response = await _apiService.getTotalByCategory(year, month);
     allData.value = response['data'];
-    print(response);
     loading.value = false;
   }
 

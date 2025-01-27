@@ -47,7 +47,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   textCancel: 'Cancel',
                   barrierDismissible: true,
                   onConfirm: () {
-                    TokenService.clearToken();
+                    StorageService.clearToken();
                     Get.offAllNamed('/login');
                   },
                   confirmTextColor: Colors.white,

@@ -8,7 +8,7 @@ class Api extends GetConnect {
   final String baseUrl = 'http://127.0.0.1:3000/';
 
   Future<dynamic> getRequest(String endpoint) async {
-    var token = TokenService.getToken();
+    var token = StorageService.getToken();
     final response = await http.get(Uri.parse("$baseUrl$endpoint"),
         headers: {
           "Authorization": "Bearer $token",
@@ -19,7 +19,7 @@ class Api extends GetConnect {
       return ApiResponse(success: true, data: jsonDecode(decodedBody));
     } else if (response.statusCode == 403 || response.statusCode == 401){
       await refreshToken();
-      token = TokenService.getToken();
+      token = StorageService.getToken();
       final response = await http.get(Uri.parse("$baseUrl$endpoint"),
           headers: {
             "Authorization": "Bearer $token",
@@ -39,7 +39,7 @@ class Api extends GetConnect {
   }
 
   Future<dynamic> postRequest(String endpoint, dynamic body) async {
-    var token = TokenService.getToken();
+    var token = StorageService.getToken();
     Map<String, String> headers = {
       "Content-Type": "application/json",
       "Authorization": "Bearer $token",
@@ -69,7 +69,7 @@ class Api extends GetConnect {
       } else if (response.statusCode == 403 || response.statusCode == 401) {
         // Handle token refresh and retry
         await refreshToken();
-        token = TokenService.getToken();
+        token = StorageService.getToken();
         return postRequest(endpoint, body); // Retry after refreshing token
       } else {
         return ApiResponse(success: false, message: "${response.statusCode}");
@@ -81,7 +81,7 @@ class Api extends GetConnect {
 
 
   Future<dynamic> putRequest(String endpoint, dynamic body) async {
-    var token = TokenService.getToken();
+    var token = StorageService.getToken();
     Map<String, String> headers = {
       "Content-Type": "application/json",
       "Authorization": "Bearer $token",
@@ -131,7 +131,7 @@ class Api extends GetConnect {
       } else if (response.statusCode == 403 || response.statusCode == 401) {
         // Handle token refresh and retry
         await refreshToken();
-        token = TokenService.getToken();
+        token = StorageService.getToken();
         return putRequest(endpoint, body); // Retry after refreshing token
       } else {
         return ApiResponse(success: false, message: "${response.statusCode}");
@@ -143,7 +143,7 @@ class Api extends GetConnect {
 
 
   Future<dynamic> deleteRequest(String endpoint) async {
-    var token = TokenService.getToken();
+    var token = StorageService.getToken();
     final response = await http.delete(
       Uri.parse("$baseUrl$endpoint"),
       headers: {
@@ -171,7 +171,7 @@ class Api extends GetConnect {
       }
     } else if (response.statusCode == 403 || response.statusCode == 401) {
       await refreshToken();
-      token = TokenService.getToken();
+      token = StorageService.getToken();
       return deleteRequest(endpoint); // Retry after refreshing token
     } else {
       return ApiResponse(success: false, message: "${response.statusCode}");
@@ -179,7 +179,7 @@ class Api extends GetConnect {
   }
 
   Future refreshToken() async {
-    final token = TokenService.getRefreshToken();
+    final token = StorageService.getRefreshToken();
     final response = await http.post(
       Uri.parse("${baseUrl}refresh"),
       headers: {"Content-Type": "application/json"}, // Ensure JSON format
@@ -190,7 +190,7 @@ class Api extends GetConnect {
     if (response.statusCode >= 200 && response.statusCode < 300) {
       final data = jsonDecode(response.body);
       // Get.snackbar('data', '${data['data']['access_token']}');
-      TokenService.saveToken(data['data']['accessToken']);
+      StorageService.saveToken(data['data']['accessToken']);
     }
   }
 

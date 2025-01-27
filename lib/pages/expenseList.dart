@@ -41,7 +41,7 @@ class _ExpenseListState extends State<ExpenseList> {
                   textCancel: 'Cancel',
                   barrierDismissible: true,
                   onConfirm: () {
-                    TokenService.clearToken();
+                    StorageService.clearToken();
                     Get.offAllNamed('/login');
                   },
                   confirmTextColor: Colors.white,
@@ -71,12 +71,21 @@ class _ExpenseListState extends State<ExpenseList> {
                             ),
                             const Divider(thickness: 1),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                               child: Row(
                                 children: [
                                   Text('Category: ${_controller.expenses[index]['CATEGORY']}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.normal)),
                                   const Spacer(),
                                   Text('Amount: ${_controller.expenses[index]['AMOUNT']}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                                ],
+                              ),
+                            ),
+                            const Divider(thickness: 1),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                              child: Row(
+                                children: [
+                                  Text('Note: ${_controller.expenses[index]['NOTES']}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.normal)),
                                 ],
                               ),
                             ),

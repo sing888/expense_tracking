@@ -1,6 +1,6 @@
 import 'package:get_storage/get_storage.dart';
 
-class TokenService {
+class StorageService {
   static final _storage = GetStorage();
 
   static String? getToken() => _storage.read('token');
@@ -11,4 +11,7 @@ class TokenService {
     _storage.remove('token');
     _storage.remove('refreshToken');
   }
+
+  static void saveCategory(var allCategory) => _storage.write('allCategory', allCategory);
+  static List<dynamic>? getCategory() => _storage.read('allCategory');
 }
