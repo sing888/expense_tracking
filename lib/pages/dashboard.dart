@@ -58,7 +58,7 @@ class _DashboardPageState extends State<DashboardPage> {
           ],
         ),
         body: Column(
-          children: [
+          children: <Widget>[
             SizedBox(
               height: Get.height * 0.03,
               child: Padding(
@@ -151,6 +151,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 barrierDismissible: false,
                                 onConfirm: () {
                                   _controller.getTotalByCategory();
+                                  _controller.getTotalByDaily();
                                   Navigator.pop(context);
                                 },
                                 confirmTextColor: Colors.white,
@@ -163,23 +164,39 @@ class _DashboardPageState extends State<DashboardPage> {
                     ],
                   )),
             ),
+            const Divider(thickness: 1.0),
+            const Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '     Total Expense by Category ',
+                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                ),
+                Spacer()
+              ],
+            ),
             SizedBox(
-              height: Get.height * 0.74,
+              height: Get.height * 0.30,
               child: Obx(
                 () => _controller.loading.value == true
                     ? const Center(child: CircularProgressIndicator())
                     : GridView.builder(
                         gridDelegate:
                             const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 300,
-                          childAspectRatio: 2.0,
+                          maxCrossAxisExtent: 200,
+                          childAspectRatio: 0.66,
                           mainAxisSpacing: 10.0,
                           crossAxisSpacing: 10.0,
                         ),
-                        itemCount: _controller.allData.length,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _controller.allDataByCategory.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Card(
-                            color: _controller.allData[index]['category'] == 'Total'? Colors.grey[300] : Colors.grey[100],
+                            color: _controller.allDataByCategory[index]['category'] ==
+                                    'Total'
+                                ? Colors.green[100]
+                                : Colors.grey[100],
                             elevation: 5.0,
                             child: Padding(
                               padding: const EdgeInsets.all(10.0),
@@ -187,14 +204,16 @@ class _DashboardPageState extends State<DashboardPage> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    _controller.allData[index]['category'].toString(),
+                                    _controller.allDataByCategory[index]['category']
+                                        .toString(),
                                     style: const TextStyle(
                                         fontSize: 20.0,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   const Divider(thickness: 1.0),
                                   Text(
-                                    _controller.allData[index]['total_expense'].toString(),
+                                    _controller.allDataByCategory[index]['total_expense']
+                                        .toString(),
                                     style: const TextStyle(fontSize: 20.0),
                                   ),
                                 ],
@@ -203,6 +222,62 @@ class _DashboardPageState extends State<DashboardPage> {
                           );
                         },
                       ),
+              ),
+            ),
+            const Divider(thickness: 1.0),
+            const Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '     Total Expense by Daily ',
+                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                ),
+                Spacer()
+              ],
+            ),
+            SizedBox(
+              height: Get.height * 0.30,
+              child: Obx(
+                    () => _controller.loading.value == true
+                    ? const Center(child: CircularProgressIndicator())
+                    : GridView.builder(
+                  gridDelegate:
+                  const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200,
+                    childAspectRatio: 0.66,
+                    mainAxisSpacing: 10.0,
+                    crossAxisSpacing: 10.0,
+                  ),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _controller.allDataByDaily.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                      elevation: 5.0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              _controller.allDataByDaily[index]['day']
+                                  .toString(),
+                              style: const TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            const Divider(thickness: 1.0),
+                            Text(
+                              _controller.allDataByDaily[index]['daily_total']
+                                  .toString(),
+                              style: const TextStyle(fontSize: 20.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ],

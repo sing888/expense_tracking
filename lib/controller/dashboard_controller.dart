@@ -7,7 +7,8 @@ class DashboardController extends GetxController {
 
   var allYears = [].obs;
   var allMonths = [].obs;
-  var allData = [].obs;
+  var allDataByCategory = [].obs;
+  var allDataByDaily = [].obs;
 
   var selectYear = 0.obs;
   var selectMonth = 0.obs;
@@ -38,6 +39,7 @@ class DashboardController extends GetxController {
     if (allMonths.isNotEmpty && selectMonth.value == 0) {
       selectMonth.value = allMonths.first;
       getTotalByCategory();
+      getTotalByDaily();
     }
     loading.value = false;
   }
@@ -47,7 +49,16 @@ class DashboardController extends GetxController {
     var year = selectYear.value.toString();
     var month = selectMonth.value.toString();
     var response = await _apiService.getTotalByCategory(year, month);
-    allData.value = response['data'];
+    allDataByCategory.value = response['data'];
+    loading.value = false;
+  }
+
+  void getTotalByDaily() async {
+    loading.value = true;
+    var year = selectYear.value.toString();
+    var month = selectMonth.value.toString();
+    var response = await _apiService.getTotalByDaily(year, month);
+    allDataByDaily.value = response['data'];
     loading.value = false;
   }
 

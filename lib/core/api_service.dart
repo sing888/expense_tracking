@@ -48,6 +48,20 @@ class ApiService {
     }
   }
 
+
+  Future getTotalByDaily(String year, String month) async {
+    if (month == '1' || month == '2' || month == '3' || month == '4' || month == '5' || month == '6' || month == '7' || month == '8' || month == '9'){
+      month = '0$month';
+    }
+    ApiResponse response = await _api.getRequest('expenses/daily?year=$year&month=$month');
+    if (response.success) {
+      return response.data;
+    }
+    else{
+      return response.message;
+    }
+  }
+
   Future login(String email, String password) async {
     ApiResponse response = await _api.postRequest('login', {'email': email, 'password': password});
     if (response.success) {

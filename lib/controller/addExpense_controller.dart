@@ -55,6 +55,7 @@ class AddExpenseController extends GetxController {
     if (result) {
       expenseListController.getUserExpense();
       dashboardController.getTotalByCategory();
+      dashboardController.getTotalByDaily();
       Get.back();
     } else {
       Get.snackbar('Error', result['message']);
