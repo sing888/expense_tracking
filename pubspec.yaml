@@ -39,6 +39,7 @@ dependencies:
   get: ^4.6.6
   icons_launcher: ^3.0.0
   http: ^1.2.2
+  path_provider: ^2.0.12
 
 dev_dependencies:
   flutter_test:

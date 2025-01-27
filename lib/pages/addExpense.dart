@@ -25,176 +25,141 @@ class _AddExpenseState extends State<AddExpense> {
         body: Column(
           children: [
             Padding(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: 200,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          final DateTime? pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.tryParse(
-                                    _controller.selectedDate.value) ??
-                                DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime.now(),
-                          );
-                          if (pickedDate != null) {
-                            _controller.selectedDate.value = pickedDate
-                                .toIso8601String(); // Convert to string
-                          }
-                        },
-                        child: Obx(() => Text(
-                            _controller.selectedDate.value.isNotEmpty
-                                ? _controller.selectedDate.value
-                                    .split('T')[0] // Display only the date part
-                                : 'Select Date',
-                            style: const TextStyle(fontSize: 16))),
-                      ),
+              padding: const EdgeInsets.all(10),
+              child: Flex(
+                direction: Axis.horizontal,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        final DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.tryParse(_controller.selectedDate.value) ??
+                              DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime.now(),
+                        );
+                        if (pickedDate != null) {
+                          _controller.selectedDate.value =
+                              pickedDate.toIso8601String(); // Convert to string
+                        }
+                      },
+                      child: Obx(() => Text(
+                          _controller.selectedDate.value.isNotEmpty
+                              ? _controller.selectedDate.value.split('T')[0]
+                              : 'Select Date',
+                          style: const TextStyle(fontSize: 16))),
                     ),
-                    SizedBox(
-                      width: 200,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Get.bottomSheet(
-                            backgroundColor: Colors.white,
-                            SizedBox(
-                                height: 500,
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 20, vertical: 10),
-                                        child: Row(
-                                          children: [
-                                            const Text('Choose Category',
-                                                style: TextStyle(fontSize: 18)),
-                                            const Spacer(),
-                                            IconButton(
-                                                icon: const Icon(Icons.add),
-                                                onPressed: () {
-                                                  Get.defaultDialog(
-                                                      title: 'Add New Category',
-                                                      textConfirm: 'Add',
-                                                      textCancel: 'Cancel',
-                                                      barrierDismissible: true,
-                                                      backgroundColor:
-                                                          Colors.white,
-                                                      buttonColor: Colors.blue,
-                                                      content: TextFormField(
-                                                        controller:
-                                                            _newCategoryController,
-                                                        decoration: const InputDecoration(
-                                                            border:
-                                                                OutlineInputBorder(),
-                                                            labelText:
-                                                                'Category Name'),
-                                                        onChanged: (value) {
-                                                          _newCategoryController
-                                                              .text = value;
-                                                        },
-                                                      ),
-                                                      onConfirm: () {
-                                                        _controller.addCategory(
-                                                            _newCategoryController
-                                                                .text);
-                                                        _newCategoryController
-                                                            .clear();
-                                                        Navigator.pop(context);
-                                                      });
-                                                })
-                                          ],
-                                        )),
-                                    const Divider(thickness: 1),
-                                    Obx(
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Get.bottomSheet(
+                          backgroundColor: Colors.white,
+                          SizedBox(
+                            height: 500,
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 10),
+                                  child: Row(
+                                    children: [
+                                      const Text('Choose Category',
+                                          style: TextStyle(fontSize: 18)),
+                                      const Spacer(),
+                                      IconButton(
+                                        icon: const Icon(Icons.add),
+                                        onPressed: () {
+                                          Get.defaultDialog(
+                                            title: 'Add New Category',
+                                            textConfirm: 'Add',
+                                            textCancel: 'Cancel',
+                                            barrierDismissible: true,
+                                            backgroundColor: Colors.white,
+                                            buttonColor: Colors.blue,
+                                            content: TextFormField(
+                                              controller: _newCategoryController,
+                                              decoration: const InputDecoration(
+                                                  border: OutlineInputBorder(),
+                                                  labelText: 'Category Name'),
+                                              onChanged: (value) {
+                                                _newCategoryController.text = value;
+                                              },
+                                            ),
+                                            onConfirm: () {
+                                              _controller.addCategory(
+                                                  _newCategoryController.text);
+                                              _newCategoryController.clear();
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                const Divider(thickness: 1),
+                                Obx(
                                       () => _controller.allCategories.isNotEmpty
-                                          ? SizedBox(
-                                              height: 400,
-                                              child: ListView.builder(
-                                                itemCount: _controller
-                                                    .allCategories.length,
-                                                itemBuilder: (context, index) {
-                                                  return ListTile(
-                                                    trailing: IconButton(
-                                                        icon: const Icon(Icons.delete, color: Colors.red),
-                                                      onPressed: () {
-                                                        Get.defaultDialog(
-                                                            title:
-                                                            'Delete Category',
-                                                            textConfirm: 'Delete',
-                                                            textCancel: 'Cancel',
-                                                            barrierDismissible:
-                                                            true,
-                                                            backgroundColor:
-                                                            Colors.white,
-                                                            buttonColor:
-                                                            Colors.red,
-                                                            content: Text(
-                                                                'Are you sure you want to delete "${_controller.allCategories[index]}" category?'),
-                                                            onConfirm: () {
-                                                              _controller
-                                                                  .removeCategory(index);
-                                                              Navigator.pop(
-                                                                  context);
-                                                            });
-                                                      }
-                                                    ),
-                                                    title: Text(_controller
-                                                        .allCategories[index]),
-                                                    onTap: () {
-                                                      _controller
-                                                              .selectedCategory
-                                                              .value =
-                                                          _controller
-                                                                  .allCategories[
-                                                              index];
-                                                      Navigator.pop(context);
-                                                    },
-                                                    onLongPress: () {
-                                                      Get.defaultDialog(
-                                                          title:
-                                                              'Delete Category',
-                                                          textConfirm: 'Delete',
-                                                          textCancel: 'Cancel',
-                                                          barrierDismissible:
-                                                              true,
-                                                          backgroundColor:
-                                                              Colors.white,
-                                                          buttonColor:
-                                                              Colors.red,
-                                                          content: Text(
-                                                              'Are you sure you want to delete "${_controller.allCategories[index]}" category?'),
-                                                          onConfirm: () {
-                                                            _controller
-                                                                .removeCategory(index);
-                                                            Navigator.pop(
-                                                                context);
-                                                          });
-                                                    },
-                                                  );
+                                      ? SizedBox(
+                                    height: 400,
+                                    child: ListView.builder(
+                                      itemCount: _controller.allCategories.length,
+                                      itemBuilder: (context, index) {
+                                        return ListTile(
+                                          trailing: IconButton(
+                                            icon: const Icon(Icons.delete,
+                                                color: Colors.red),
+                                            onPressed: () {
+                                              Get.defaultDialog(
+                                                title: 'Delete Category',
+                                                textConfirm: 'Delete',
+                                                textCancel: 'Cancel',
+                                                barrierDismissible: true,
+                                                backgroundColor: Colors.white,
+                                                buttonColor: Colors.red,
+                                                content: Text(
+                                                    'Are you sure you want to delete "${_controller.allCategories[index]}" category?'),
+                                                onConfirm: () {
+                                                  _controller.removeCategory(index);
+                                                  Navigator.pop(context);
                                                 },
-                                              ),
-                                            )
-                                          : const Center(
-                                              child:
-                                                  Text('No Categories Found')),
-                                    )
-                                  ],
-                                )),
-                          );
-                        },
-                        child: Obx(() => Text(
-                            _controller.selectedCategory.value.isNotEmpty
-                                ? _controller.selectedCategory
-                                    .value // Display only the date part
-                                : 'Select Category',
-                            style: const TextStyle(fontSize: 16))),
-                      ),
-                    )
-                  ],
-                )),
+                                              );
+                                            },
+                                          ),
+                                          title: Text(
+                                              _controller.allCategories[index]),
+                                          onTap: () {
+                                            _controller.selectedCategory.value =
+                                            _controller.allCategories[index];
+                                            Navigator.pop(context);
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  )
+                                      : const Center(child: Text('No Categories Found')),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      child: Obx(() => Text(
+                          _controller.selectedCategory.value.isNotEmpty
+                              ? _controller.selectedCategory.value
+                              : 'Select Category',
+                          style: const TextStyle(fontSize: 16))),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
             Padding(
               padding: const EdgeInsets.all(10),
               child: TextField(

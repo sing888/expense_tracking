@@ -28,6 +28,7 @@ class LoginController extends GetxController {
     }
 
     var response = await _apiService.login(email, password);
+    print(response);
     if (response) {
       Get.offAndToNamed('/');
     }else{

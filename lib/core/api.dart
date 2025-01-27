@@ -5,7 +5,8 @@ import 'dart:convert';
 import 'get_storage.dart';
 
 class Api extends GetConnect {
-  final String baseUrl = 'http://127.0.0.1:3000/';
+  // final String baseUrl = 'http://127.0.0.1:3000/';
+  final String baseUrl = 'http://10.0.2.2:3000/';
 
   Future<dynamic> getRequest(String endpoint) async {
     var token = StorageService.getToken();
